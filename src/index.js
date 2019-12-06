@@ -97,6 +97,10 @@ class Square extends React.Component {
             history:[{
                 squares:Array(9).fill(null),
             }],
+            record:[{
+              player:"",
+              location:""
+            }],
             xIsNext:true,
             stepNumber:0,
         }
@@ -109,6 +113,7 @@ class Square extends React.Component {
     }
     handleClick(i){
         const history=this.state.history.slice(0,this.state.stepNumber+1);
+        const record=this.state.record.slice(0,this.state.stepNumber+1);
         const current=history[history.length-1];
         const squares=current.squares.slice();
         if(calculateWinner(squares)||squares[i]){
@@ -119,6 +124,10 @@ class Square extends React.Component {
             history:history.concat([{
                 squares:squares,
             }]),
+            record:record.concat({
+              player:squares[i],
+              location:i
+            }),
             xIsNext:!this.state.xIsNext,
             stepNumber:history.length,
         });
@@ -136,7 +145,7 @@ class Square extends React.Component {
         );
       }    
     render() {
-        const history=this.state.history;
+        const {history,record}=this.state;
         const current=history[this.state.stepNumber];
         const winner= calculateWinner(current.squares);
         const moves=history.map((step,move)=>{
@@ -155,7 +164,7 @@ class Square extends React.Component {
             return (
                 <li key={move}>
                     <button onClick={()=>this.jumpTo(move)}>{desc}</button>
-                    <span>{squares2}</span>
+                    <span>{"player is "+record[move].player+";location is "+record[move].location}</span>
                 </li>
             )
         })
